@@ -18,7 +18,7 @@ module OTP
     def encode(bytes)
       return nil unless bytes
       ret = ""
-      bytes = bytes.encode("binary")
+      bytes = bytes.dup.force_encoding("binary")
       off = 0
       while off < bytes.length
         n = 0
@@ -37,7 +37,8 @@ module OTP
     def decode(chars)
       return nil unless chars
       ret = ""
-      chars = chars.encode("binary")
+      chars = chars.upcase
+      ret.force_encoding("binary")
       off = 0
       while off < chars.length
         n = l = 0
