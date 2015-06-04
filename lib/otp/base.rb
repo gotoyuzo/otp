@@ -56,7 +56,7 @@ module OTP
       raise NotImplementedError
     end
 
-    def extract_type_specific_uri_param
+    def extract_type_specific_uri_params(query)
       raise NotImplementedError
     end
   end
