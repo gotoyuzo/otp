@@ -7,7 +7,7 @@ class TestBase32 < Test::Unit::TestCase
   end
 
   def assert_decode(encoded, plain)
-    plain = plain.dup.force_encoding("binary")
+    plain &&= plain.dup.force_encoding("binary")
     assert_equal(::OTP::Base32.decode(encoded), plain)
   end
 
@@ -17,6 +17,7 @@ class TestBase32 < Test::Unit::TestCase
   end
 
   def test_base32
+    assert_encode_decode(nil, nil)
     assert_encode_decode("", "")
     assert_encode_decode("f", "MY======")
     assert_encode_decode("fo", "MZXQ====")
