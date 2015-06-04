@@ -2,18 +2,18 @@ require "test/unit"
 require "otp/base32"
 
 class TestBase32 < Test::Unit::TestCase
-  def assert_encode(plain, encoded)
-    assert_equal(::OTP::Base32.encode(plain), encoded)
+  def assert_encode(encoded, plain)
+    assert_equal(encoded, ::OTP::Base32.encode(plain))
   end
 
-  def assert_decode(encoded, plain)
+  def assert_decode(plain, encoded)
     plain &&= plain.dup.force_encoding("binary")
-    assert_equal(::OTP::Base32.decode(encoded), plain)
+    assert_equal(plain, ::OTP::Base32.decode(encoded))
   end
 
   def assert_encode_decode(plain, encoded)
-    assert_encode(plain, encoded)
-    assert_decode(encoded, plain)
+    assert_decode(plain, encoded)
+    assert_encode(encoded, plain)
   end
 
   def test_base32

@@ -4,7 +4,7 @@ require "otp"
 class TestTOTP < Test::Unit::TestCase
   def assert_totp(totp, time, pass)
     totp.time = time
-    assert_equal(totp.password, pass)
+    assert_equal(pass, totp.password)
     assert(totp.verify(pass))
     assert(!totp.verify(pass.chop))
   end
