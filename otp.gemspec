@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Yuuzou Gotou"]
   spec.email         = ["gotoyuzo@notwork.org"]
   spec.summary       = %q{One-Time Password Library}
-  spec.description   = %q{This library provides an implementation of HOTP (RFC4226) and TOTP (RFC6238).}
+  spec.description   = %q{An implementation of HOTP (RFC4226) and TOTP (RFC6238).}
   spec.homepage      = ""
   spec.license       = "MIT"
 
