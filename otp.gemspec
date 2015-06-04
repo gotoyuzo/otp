@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["gotoyuzo@notwork.org"]
   spec.summary       = %q{One-Time Password Library}
   spec.description   = %q{An implementation of HOTP (RFC4226) and TOTP (RFC6238).}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/gotoyuzo/otp"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
