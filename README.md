@@ -23,6 +23,11 @@ To create new TOTP secret:
     p totp.time      #=> nil (UNIX time by Time or Integer; nil for the current time)
     p totp.password  #=> "123456" (password for the current time)
 
+    # Format TOTP URI. Otpauth scheme URLs can be read by OTP::URI.parse.
+    totp.issuer = "My Company"
+    totp.accountname = "account@exaple.com"
+    p totp.to_uri    #=> "otpauth://totp/My%20Company:account@exaple.com?secret=47JBA7ZWDDLNZJMX&issuer=My+Company"
+
 To verify given TOTP password:
 
     require "otp"
