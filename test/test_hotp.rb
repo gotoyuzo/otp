@@ -4,7 +4,7 @@ require "otp"
 class TestHTOP < Test::Unit::TestCase
   def assert_hotp(hotp, count, pass)
     hotp.count = count
-    assert_equal(hotp.password, pass)
+    assert_equal(pass, hotp.password)
     assert(hotp.verify(pass))
     assert(!hotp.verify(pass.chop))
   end
