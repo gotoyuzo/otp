@@ -27,4 +27,15 @@ class TestBase32 < Test::Unit::TestCase
     assert_encode_decode("foobar", "MZXW6YTBOI======")
     assert_encode_decode("\u{3042}\u{3044}\u{3046}\u{3048}\u{304a}", "4OAYFY4BQTRYDBXDQGEOHAMK")
   end
+
+  def test_truncated_decode
+    assert_decode("f", "MY")
+    assert_decode("fo", "MZXQ")
+    assert_decode("foo", "MZXW6")
+    assert_decode("foob", "MZXW6YQ")
+    assert_decode("f", "my")
+    assert_decode("fo", "mzxq")
+    assert_decode("foo", "mzxw6")
+    assert_decode("foob", "mzxw6yq")
+  end
 end
