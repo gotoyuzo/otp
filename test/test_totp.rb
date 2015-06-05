@@ -41,4 +41,34 @@ class TestTOTP < Test::Unit::TestCase
     assert_totp(totp, 2000000000,  "38618901")
     assert_totp(totp, 20000000000, "47863826")
   end
+
+  def test_last_and_post
+    seed = "12345678901234567890"
+    totp = OTP::TOTP.new(OTP::Base32.encode(seed), "SHA1", 8)
+    totp.time = Time.at(1433502016)
+
+    assert(!totp.verify("71170909"))
+    assert(totp.verify("50451956"))  # current
+    assert(!totp.verify("36432053"))
+
+    assert(!totp.verify("79346509", last:2))
+    assert(totp.verify("60048391", last:2))
+    assert(totp.verify("71170909", last:2))
+    assert(totp.verify("50451956", last:2))  # current
+    assert(!totp.verify("36432053", last:2))
+
+    assert(!totp.verify("71170909", post:2))
+    assert(totp.verify("50451956", post:2))  # current
+    assert(totp.verify("36432053", post:2))
+    assert(totp.verify("78660635", post:2))
+    assert(!totp.verify("97845627", post:2))
+
+    assert(!totp.verify("79346509", last:2, post:2))
+    assert(totp.verify("60048391", last:2, post:2))
+    assert(totp.verify("71170909", last:2, post:2))
+    assert(totp.verify("50451956", last:2, post:2))  # current
+    assert(totp.verify("36432053", last:2, post:2))
+    assert(totp.verify("78660635", last:2, post:2))
+    assert(!totp.verify("97845627", last:2, post:2))
+  end
 end
