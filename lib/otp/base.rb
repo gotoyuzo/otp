@@ -29,21 +29,23 @@ module OTP
       raise NotImplementedError
     end
 
-    def otp
+    def otp(generation=0)
       hash = hmac(algorithm, OTP::Base32.decode(secret),
-                  pack_int64(moving_factor))
+                  pack_int64(moving_factor+generation))
       return truncate(hash)
     end
 
-    def password
-      pw = (otp % (10 ** digits)).to_s
+    def password(generation=0)
+      pw = (otp(generation) % (10 ** digits)).to_s
       pw = "0" + pw while pw.length < digits
       return pw
     end
 
-    def verify(otp)
-      return false if otp.nil? || otp.empty?
-      return compare(password, otp)
+    def verify(given_pw, last:0, post:0)
+      raise "last must be greater than or equal to 0" if last < 0
+      raise "post must be greater than or equal to 0" if post < 0
+      return false if given_pw.nil? || given_pw.empty?
+      return (-last..post).any?{|i| compare(password(i), given_pw) }
     end
 
     ## URI related methods
