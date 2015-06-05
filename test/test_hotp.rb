@@ -44,9 +44,9 @@ class TestHTOP < Test::Unit::TestCase
     assert(!hotp.verify("359152", last:2, post:2))  # pass for 2
     assert(hotp.verify("969429", last:2, post:2))  # pass for 3
     assert(hotp.verify("338314", last:2, post:2))  # pass for 4
-    assert(hotp.verify("254676", post:2, post:2))  # pass for 5
-    assert(hotp.verify("287922", post:2, post:2))  # pass for 6
-    assert(hotp.verify("162583", post:2, post:2))  # pass for 7
-    assert(!hotp.verify("399871", post:2, post:2))  # pass for 8
+    assert(hotp.verify("254676", last:2, post:2))  # pass for 5
+    assert(hotp.verify("287922", last:2, post:2))  # pass for 6
+    assert(hotp.verify("162583", last:2, post:2))  # pass for 7
+    assert(!hotp.verify("399871", last:2, post:2))  # pass for 8
   end
 end
