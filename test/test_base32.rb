@@ -38,4 +38,20 @@ class TestBase32 < Test::Unit::TestCase
     assert_decode("foo", "mzxw6")
     assert_decode("foob", "mzxw6yq")
   end
+
+  def test_unspecified
+    assert_raise(ArgumentError){ OTP::Base32.decode("MY0") }
+    assert_decode("", "=")
+    assert_decode("", "M=======")
+    assert_decode("f", "MZX=====")
+    assert_decode("foo", "MZXW6Y==")
+    assert_decode("", "M")
+    assert_decode("f", "MZX")
+    assert_decode("foo", "MZXW6Y")
+    assert_decode("fooba", "MZXW6YTB===")
+    assert_decode("f", "MY=AAAAA")
+    assert_decode("fo", "MZXQ=AAA")
+    assert_decode("foo", "MZXW6=AA")
+    assert_decode("foo", "MZXW6=00")
+  end
 end

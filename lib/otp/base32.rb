@@ -23,11 +23,11 @@ module OTP
       while off < bytes.length
         n = 0
         bits = bytes[off, 5]
-        l = bits.length
+        l = (bits.length * 8.0 / 5.0).ceil
         bits << "\0" while bits.length < 5
         bits.each_byte{|b| n = (n << 8) | b }
-        8.times do |i|
-          ret << ((l*8/5 < i) ? ?= : BASE32_ENCODE[(n >> (7-i)*5) & 0x1f])
+        (1..8).each do |i|
+          ret << ((i > l) ? ?= : BASE32_ENCODE[(n >> (8-i)*5) & 0x1f])
         end
         off += 5
       end
@@ -47,13 +47,15 @@ module OTP
         bits.each_char.with_index do |c, i|
           d = BASE32_DECODE[c]
           raise ArgumentError, "invalid char: #{c}" unless d
-          n <<= 5
-          if d >= 0
-            n |= d
-            l = i * 5 / 8
+          if d < 0
+            n <<= 5 * (8-i)
+            break
           end
+          n <<= 5
+          n |= d
+          l = ((i+1) * 5.0 / 8.0).floor
         end
-        ret << (0..l).map{|i| (n >> 32 - i * 8) & 0xff }.pack("c*")
+        ret << (1..l).map{|i| (n >> 40 - i * 8) & 0xff }.pack("c*")
         off += 8
       end
       return ret
