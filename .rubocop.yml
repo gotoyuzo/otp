@@ -1,0 +1,49 @@
+AllCops:
+  Exclude: []
+  RunRailsCops: false
+  DisplayCopNames: true
+
+Style/StringLiterals:
+  Enabled: false
+
+Style/GuardClause:
+  Enabled: false
+
+Style/TrailingComma:
+  Enabled: false
+
+Style/SpaceAroundEqualsInParameterDefault:
+  Enabled: false
+
+Style/SpaceAroundOperators:
+  Enabled: false
+
+Style/SpaceBeforeBlockBraces:
+  Enabled: false
+
+Style/SpaceInsideHashLiteralBraces:
+  Enabled: false
+
+Style/SpaceInsideBlockBraces:
+  Enabled: false
+
+Style/RedundantReturn:
+  Enabled: false
+
+Style/SignalException:
+  Enabled: false
+
+Style/FormatString:
+  Enabled: false
+
+Style/EachWithObject:
+  Enabled: false
+
+Metrics/AbcSize:
+  Max: 20
+
+Metrics/MethodLength:
+  Max: 30
+
+Style/IfUnlessModifier:
+  Enabled: false
