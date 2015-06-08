@@ -1,6 +1,23 @@
 require_relative "helper"
 
 class TestURI < Test::Unit::TestCase
+  def test_parse
+    uri = "otpauth://totp/account@example.com?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ"
+    otp = OTP::URI.parse(uri)
+    assert_equal("account@example.com", otp.accountname)
+    assert_equal(nil, otp.issuer)
+
+    uri = "otpauth://totp/My%20Company:%20%20account@example.com?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ"
+    otp = OTP::URI.parse(uri)
+    assert_equal("account@example.com", otp.accountname)
+    assert_equal("My Company", otp.issuer)
+
+    uri = "otpauth://totp/My%20Company:%20%20account@example.com?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ"
+    otp = OTP::URI.parse(uri)
+    assert_equal("account@example.com", otp.accountname)
+    assert_equal("My Company", otp.issuer)
+  end
+
   def test_totp
     secret = OTP::Base32.encode("12345678901234567890")
     totp = OTP::TOTP.new

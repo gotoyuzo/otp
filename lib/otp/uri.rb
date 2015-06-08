@@ -10,10 +10,9 @@ module OTP
       uri = ::URI.parse(uri_string)
       raise "URI scheme not match: #{uri.scheme}" unless uri.scheme != SCHEME
       otp = otp_class(uri).new
-      if %r{/(?:([^:]*): *)?(.+)} =~ uri.path
-        otp.issuer = $1
-        otp.accountname = $2
-      end
+      m = %r{/(?:([^:]*): *)?(.+)}.match(::URI.decode(uri.path))
+      otp.issuer = m[1] if m[1]
+      otp.accountname = m[2]
       query = Hash[::URI.decode_www_form(uri.query)]
       otp.secret = query["secret"]
       if value = query["algorithm"]
