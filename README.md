@@ -43,8 +43,12 @@ To verify given TOTP password:
     totp.secret = "YVMR2G7N4OAXGKFC"
     p totp.verify("123456")  #=> true/false (verify given passowrd)
 
-The value of "secret" is encoded with BASE32 algorithm to be compatible
-with Google Authenticator URI format.
+You can use the last and post option parameters to verify several generations, including before and after the current password.
+
+    # verify passwords from last 2 generation to post 1 generation
+    p totp.verify("123456", last: 2, post: 1)
+
+The value of "secret" is encoded with BASE32 algorithm to be compatible with Google Authenticator URI format.
 
 * BASE32: http://tools.ietf.org/html/rfc4648
 * Google Authenticator Key URI format: https://github.com/google/google-authenticator/wiki/Key-Uri-Format
