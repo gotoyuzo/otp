@@ -4,13 +4,8 @@
 [![Gem Version](https://badge.fury.io/rb/otp.svg)](https://rubygems.org/gems/otp)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/gotoyuzo/otp/blob/master/LICENSE.txt)
 
-This library provides an implementation of 
-HMAC-Based One-Time Password Algorithm (HOTP; RFC4226) and
+This library provides an implementation of HMAC-Based One-Time Password Algorithm (HOTP; RFC4226) and
 Time-Based One-Time Password Algorithm (HOTP; RFC6238).
-The Algorithm details can be referred at the following URLs.
-
-* HOTP: http://tools.ietf.org/html/rfc4226
-* TOTP: http://tools.ietf.org/html/rfc6238
 
 ## Usage
 
@@ -48,7 +43,15 @@ You can use the last and post option parameters to verify several generations, i
     # verify passwords from last 2 generation to post 1 generation
     p totp.verify("123456", last: 2, post: 1)
 
-The value of "secret" is encoded with BASE32 algorithm to be compatible with Google Authenticator URI format.
+## Related Information
 
-* BASE32: http://tools.ietf.org/html/rfc4648
-* Google Authenticator Key URI format: https://github.com/google/google-authenticator/wiki/Key-Uri-Format
+TOTP and HOTP algorithm details can be referred at the following URLs.
+
+* HOTP: An HMAC-Based One-Time Password Algorithm - http://tools.ietf.org/html/rfc4226
+* TOTP: Time-Based One-Time Password Algorithm - http://tools.ietf.org/html/rfc6238
+
+In the OTP URI format, the value of "secret" is encoded with BASE32 algorithm.
+The Format details are described in the document of Google Authenticator.
+
+* The Base16, Base32, and Base64 Data Encodings - http://tools.ietf.org/html/rfc4648
+* Google Authenticator Key URI format - https://github.com/google/google-authenticator/wiki/Key-Uri-Format
