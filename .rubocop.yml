@@ -39,8 +39,8 @@ Style/FormatString:
 Style/EachWithObject:
   Enabled: false
 
-Metrics/AbcSize:
-  Max: 20
+#Metrics/AbcSize:
+#  Max: 20
 
 Metrics/MethodLength:
   Max: 30
