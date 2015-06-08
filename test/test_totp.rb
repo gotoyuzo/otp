@@ -71,4 +71,11 @@ class TestTOTP < Test::Unit::TestCase
     assert(totp.verify("78660635", last:2, post:2))
     assert(!totp.verify("97845627", last:2, post:2))
   end
+
+  def test_error
+    seed = "12345678901234567890"
+    totp = OTP::TOTP.new(OTP::Base32.encode(seed), "SHA1", 8)
+    assert_raise(ArgumentError){ assert(totp.verify("50451956", last:-2)) }
+    assert_raise(ArgumentError){ assert(totp.verify("50451956", post:-2)) }
+  end
 end

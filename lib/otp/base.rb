@@ -42,8 +42,8 @@ module OTP
     end
 
     def verify(given_pw, last:0, post:0)
-      raise "last must be greater than or equal to 0" if last < 0
-      raise "post must be greater than or equal to 0" if post < 0
+      raise ArgumentError, "last must be greater than or equal to 0" if last < 0
+      raise ArgumentError, "post must be greater than or equal to 0" if post < 0
       return false if given_pw.nil? || given_pw.empty?
       return (-last..post).any?{|i| compare(password(i), given_pw) }
     end
