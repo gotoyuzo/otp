@@ -1,5 +1,4 @@
-require "test/unit"
-require "otp"
+require_relative "helper"
 
 class TestHTOP < Test::Unit::TestCase
   def assert_hotp(hotp, count, pass)

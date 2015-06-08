@@ -1,5 +1,4 @@
-require "test/unit"
-require "otp"
+require_relative "helper"
 
 class TestURI < Test::Unit::TestCase
   def test_totp
@@ -45,5 +44,10 @@ class TestURI < Test::Unit::TestCase
     assert_equal("account@example.com", otp.accountname)
     assert_equal("My Company", otp.issuer)
     assert_equal(otp.password, hotp.password)
+  end
+
+  def test_parse_invalid
+    assert_raise(RuntimeError){ OTP::URI.parse("http://www.netlab.jp") }
+    assert_raise(RuntimeError){ OTP::URI.parse("otpauth://foo") }
   end
 end

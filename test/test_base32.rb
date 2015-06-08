@@ -1,5 +1,4 @@
-require "test/unit"
-require "otp/base32"
+require_relative "helper"
 
 class TestBase32 < Test::Unit::TestCase
   def assert_encode(encoded, plain, padding: true)

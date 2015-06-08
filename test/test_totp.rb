@@ -1,5 +1,4 @@
-require "test/unit"
-require "otp"
+require_relative "helper"
 
 class TestTOTP < Test::Unit::TestCase
   def assert_totp(totp, time, pass)
