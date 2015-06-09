@@ -21,8 +21,15 @@ module OTP
     end
 
     def new_secret(num_bytes=10)
-      s = (0...num_bytes).map{ Random.rand(256).chr }.join
-      self.secret = OTP::Base32.encode(s)
+      self.raw_secret = OpenSSL::Random.random_bytes(num_bytes)
+    end
+
+    def raw_secret=(bytes)
+      self.secret = OTP::Base32.encode(bytes)
+    end
+
+    def raw_secret
+      return OTP::Base32.decode(secret)
     end
 
     def moving_factor
@@ -30,8 +37,8 @@ module OTP
     end
 
     def otp(generation=0)
-      hash = hmac(algorithm, OTP::Base32.decode(secret),
-                  pack_int64(moving_factor+generation))
+      message = pack_int64(moving_factor+generation)
+      hash = hmac(algorithm, raw_secret, message)
       return truncate(hash)
     end
 
@@ -48,10 +55,8 @@ module OTP
       return (-last..post).any?{|i| compare(password(i), given_pw) }
     end
 
-    ## URI related methods
-
     def to_uri
-      OTP::URI.format(self)
+      return OTP::URI.format(self)
     end
 
     def type_specific_uri_params
