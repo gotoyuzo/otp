@@ -118,6 +118,8 @@ class TestURI < Test::Unit::TestCase
     assert_match(/URI scheme not match/, e.message)
     e = assert_raise(RuntimeError){ OTP::URI.parse("otpauth://foo") }
     assert_match(/unknown OTP type/, e.message)
+    e = assert_raise(RuntimeError){ OTP::URI.parse("otpauth://version") }
+    assert_match(/unknown OTP type/, e.message)
     e = assert_raise(RuntimeError){ OTP::URI.parse("otpauth://totp/") }
     assert_match(/account name must be present/, e.message)
   end

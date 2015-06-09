@@ -38,6 +38,7 @@ module OTP
 
     def type_to_class(uri)
       klass = OTP.const_get(uri.host.upcase)
+      raise unless klass.is_a?(Class)
       raise unless klass.ancestors.include?(OTP::Base)
       return klass
     rescue
