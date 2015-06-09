@@ -34,16 +34,8 @@ module OTP
       raise NotImplementedError
     end
 
-    def otp(generation=0)
-      message = pack_int64(moving_factor+generation)
-      hash = hmac(algorithm, raw_secret, message)
-      return truncate(hash)
-    end
-
     def password(generation=0)
-      pw = (otp(generation) % (10 ** digits)).to_s
-      pw = "0" + pw while pw.length < digits
-      return pw
+      return otp(algorithm, raw_secret, moving_factor+generation, digits)
     end
 
     def verify(given_pw, last:0, post:0)

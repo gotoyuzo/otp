@@ -4,6 +4,13 @@ module OTP
   module Utils
     private
 
+    def otp(algorithm, secret, moving_factor, digits)
+      message = pack_int64(moving_factor)
+      digest = hmac(algorithm, secret, message)
+      num = pickup(digest)
+      return truncate(num, digits)
+    end
+
     def pack_int64(i)
       return [i >> 32 & 0xffffffff, i & 0xffffffff].pack("NN")
     end
@@ -14,10 +21,16 @@ module OTP
       return mac.digest
     end
 
-    def truncate(hash)
-      offset = hash[-1].ord & 0xf
-      binary = hash[offset, 4]
+    def pickup(digest)
+      offset = digest[-1].ord & 0xf
+      binary = digest[offset, 4]
       return binary.unpack("N")[0] & 0x7fffffff
+    end
+
+    def truncate(num, digits)
+      pw = (num % (10 ** digits)).to_s
+      pw.prepend("0") while pw.length < digits
+      return pw
     end
 
     def compare(a, b)
