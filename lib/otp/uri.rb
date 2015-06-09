@@ -2,29 +2,23 @@ require "uri"
 
 module OTP
   module URI
-    module_function
+    SCHEME = "otpauth"
 
-    SCHEME = "othauth"
+    module_function
 
     def parse(uri_string)
       uri = ::URI.parse(uri_string)
-      raise "URI scheme not match: #{uri.scheme}" unless uri.scheme != SCHEME
-      otp = otp_class(uri).new
-      m = %r{/(?:([^:]*): *)?(.+)}.match(::URI.decode(uri.path))
+      if uri.scheme.downcase != SCHEME
+        raise "URI scheme not match: #{uri.scheme}"
+      end
+      otp = type_to_class(uri).new
+      unless m = %r{/(?:([^:]*): *)?(.+)}.match(::URI.decode(uri.path))
+        raise "account name must be present: #{uri_string}"
+      end
       otp.issuer = m[1] if m[1]
       otp.accountname = m[2]
       query = Hash[::URI.decode_www_form(uri.query)]
-      otp.secret = query["secret"]
-      if value = query["algorithm"]
-        otp.algorithm = value
-      end
-      if value = query["issuer"]
-        otp.issuer = value
-      end
-      if value = query["digits"]
-        otp.digits = value.to_i
-      end
-      otp.extract_type_specific_uri_params(query)
+      otp.extract_uri_params(query)
       return otp
     end
 
@@ -32,41 +26,22 @@ module OTP
       raise "secret must be set" if otp.secret.nil?
       raise "accountname must be set" if otp.accountname.nil?
       typename = otp.class.name.split("::")[-1].downcase
-      label = otp.issuer ? "#{otp.issuer}:#{otp.accountname}" : otp.accountname
-      params = pickup_params(otp)
-      return "otpauth://%s/%s?%s" % [
+      label = otp.accountname.dup
+      label.prepend("#{otp.issuer}:") if otp.issuer
+      return "%s://%s/%s?%s" % [
+        SCHEME,
         ::URI.encode(typename),
         ::URI.encode(label),
-        ::URI.encode_www_form(params)
+        ::URI.encode_www_form(otp.uri_params)
       ]
     end
 
-    def otp_class(uri)
-      case uri.host.upcase
-      when "HOTP"
-        OTP::HOTP
-      when "TOTP"
-        OTP::TOTP
-      else
-        raise "unknown OTP type: #{uri.host}"
-      end
-    end
-
-    def pickup_params(otp)
-      param_spec = [
-        [:secret, nil],
-        [:issuer, nil],
-        [:algorithm, OTP::Base::DEFAULT_ALGORITHM],
-        [:digits, OTP::Base::DEFAULT_DIGITS],
-      ]
-      params = param_spec.reduce({}) do |h, (name, default)|
-        value = otp.send(name)
-        if value && value != default
-          h[name] = value
-        end
-        h
-      end
-      return params.merge(otp.type_specific_uri_params)
+    def type_to_class(uri)
+      klass = OTP.const_get(uri.host.upcase)
+      raise unless klass.ancestors.include?(OTP::Base)
+      return klass
+    rescue
+      raise "unknown OTP type: #{uri.host}"
     end
   end
 end

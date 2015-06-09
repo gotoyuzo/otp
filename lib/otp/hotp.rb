@@ -13,14 +13,13 @@ module OTP
       return count
     end
 
-    def type_specific_uri_params
-      return {count: count}
+    def uri_params
+      return super.merge(count: count)
     end
 
-    def extract_type_specific_uri_params(query)
-      if value = query["count"]
-        self.count = value.to_i
-      end
+    def extract_uri_params(params)
+      super
+      self.count = (params["count"] || count).to_i
     end
   end
 end

@@ -49,18 +49,12 @@ class TestBase < Test::Unit::TestCase
     assert_equal("foobarbaz", otp.raw_secret)
   end
 
-  def test_methods_expected_to_be_override
+  def test_moving_factor
     base = OTP::Base.new
     hotp = OTP::HOTP.new
     totp = OTP::TOTP.new
-    [
-      [:moving_factor, ],
-      [:type_specific_uri_params, ],
-      [:extract_type_specific_uri_params, {}],
-    ].each do |m, *args|
-      assert_raise(NotImplementedError){ base.send(m, *args) }
-      assert_nothing_raised{ hotp.send(m, *args) }
-      assert_nothing_raised{ totp.send(m, *args) }
-    end
+    assert_raise(NotImplementedError){ base.moving_factor }
+    assert_nothing_raised{ hotp.moving_factor }
+    assert_nothing_raised{ totp.moving_factor }
   end
 end

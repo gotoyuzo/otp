@@ -9,9 +9,7 @@ module OTP
     DEFAULT_DIGITS = 6
     DEFAULT_ALGORITHM = "SHA1"
 
-    attr_accessor :secret
-    attr_accessor :algorithm
-    attr_accessor :digits
+    attr_accessor :secret, :algorithm, :digits
     attr_accessor :issuer, :accountname
 
     def initialize(secret=nil, algorithm=nil, digits=nil)
@@ -59,12 +57,20 @@ module OTP
       return OTP::URI.format(self)
     end
 
-    def type_specific_uri_params
-      raise NotImplementedError
+    def uri_params
+      params = {}
+      params[:secret] = secret
+      params[:issuer] = issuer if issuer
+      params[:algorithm] = algorithm if algorithm != DEFAULT_ALGORITHM
+      params[:digits] = digits if digits != DEFAULT_DIGITS
+      return params
     end
 
-    def extract_type_specific_uri_params(_query)
-      raise NotImplementedError
+    def extract_uri_params(params)
+      self.secret = params["secret"]
+      self.issuer = issuer || params["issuer"]
+      self.algorithm = params["algorithm"] || algorithm
+      self.digits = (params["digits"] || digits).to_i
     end
   end
 end

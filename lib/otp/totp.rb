@@ -16,16 +16,15 @@ module OTP
       return (time || Time.now).to_i / period
     end
 
-    def type_specific_uri_params
-      params = {}
+    def uri_params
+      params = super
       params["period"] = period if period != DEFAULT_PERIOD
       return params
     end
 
-    def extract_type_specific_uri_params(query)
-      if value = query["period"]
-        self.period = value.to_i
-      end
+    def extract_uri_params(params)
+      super
+      self.period = (params["period"] || period).to_i
     end
   end
 end
