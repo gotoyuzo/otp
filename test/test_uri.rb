@@ -118,6 +118,16 @@ class TestURI < Test::Unit::TestCase
     assert_equal(otp.password, hotp.password)
   end
 
+  def test_format_invalid
+    totp = OTP::TOTP.new
+    e = assert_raise(RuntimeError){ totp.to_uri }
+    assert_match(/secret must be set/, e.message)
+
+    totp.new_secret
+    e = assert_raise(RuntimeError){ totp.to_uri }
+    assert_match(/accountname must be set/, e.message)
+  end
+
   def test_parse_invalid
     e = assert_raise(RuntimeError){ OTP::URI.parse("http://www.netlab.jp") }
     assert_match(/URI scheme not match/, e.message)

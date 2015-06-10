@@ -51,7 +51,8 @@ class TestBase32 < Test::Unit::TestCase
   end
 
   def test_unspecified
-    assert_raise(ArgumentError){ OTP::Base32.decode("MY0") }
+    e = assert_raise(ArgumentError){ OTP::Base32.decode("MY0") }
+    assert_equal("invalid char: 0", e.message)
     assert_decode("", "=")
     assert_decode("`", "M=======")
     assert_decode("fn", "MZX=====")
