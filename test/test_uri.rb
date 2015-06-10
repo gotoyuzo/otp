@@ -17,6 +17,11 @@ class TestURI < Test::Unit::TestCase
     assert_equal("account@example.com", otp.accountname)
     assert_equal("My Company", otp.issuer)
 
+    uri = "otpauth://totp/My%20Company%3A%20%20account@example.com?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ"
+    otp = OTP::URI.parse(uri)
+    assert_equal("account@example.com", otp.accountname)
+    assert_equal("My Company", otp.issuer)
+
     uri = "otpauth://totp/My%20Company:%20%20account@example.com?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&issuer=Foo"
     otp = OTP::URI.parse(uri)
     assert_equal("account@example.com", otp.accountname)

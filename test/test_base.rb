@@ -49,6 +49,17 @@ class TestBase < Test::Unit::TestCase
     assert_equal("foobarbaz", otp.raw_secret)
   end
 
+  def test_verify
+    otp = OTP::Base.new
+    e = assert_raise(ArgumentError){ otp.verify("0", last:-1) }
+    assert_match(/last must be greater than or equal to 0/, e.message)
+    e = assert_raise(ArgumentError){ otp.verify("0", post:-1) }
+    assert_match(/post must be greater than or equal to 0/, e.message)
+    assert_equal(false, otp.verify(nil))
+    assert_equal(false, otp.verify(""))
+    assert_raise(NotImplementedError){ otp.verify("0") }
+  end
+
   def test_moving_factor
     base = OTP::Base.new
     hotp = OTP::HOTP.new
