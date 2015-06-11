@@ -24,8 +24,8 @@ class TestBase < Test::Unit::TestCase
     assert_equal("", otp.secret)
     assert_equal("", otp.raw_secret)
 
-    otp.secret = "MZXW6YTBOI======"
-    assert_equal("MZXW6YTBOI======", otp.secret)
+    otp.secret = "MZXW6YTBOI"
+    assert_equal("MZXW6YTBOI", otp.secret)
     assert_equal("foobar", otp.raw_secret)
 
     otp.secret = "MZXW6YTBOI"
@@ -45,7 +45,7 @@ class TestBase < Test::Unit::TestCase
     assert_equal("", otp.raw_secret)
 
     otp.raw_secret = "foobarbaz"
-    assert_equal("MZXW6YTBOJRGC6Q=", otp.secret)
+    assert_equal("MZXW6YTBOJRGC6Q", otp.secret)
     assert_equal("foobarbaz", otp.raw_secret)
   end
 

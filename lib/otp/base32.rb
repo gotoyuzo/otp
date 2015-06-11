@@ -10,68 +10,48 @@ module OTP
       "I"=>8,  "J"=>9,  "K"=>10, "L"=>11, "M"=>12, "N"=>13, "O"=>14, "P"=>15,
       "Q"=>16, "R"=>17, "S"=>18, "T"=>19, "U"=>20, "V"=>21, "W"=>22, "X"=>23,
       "Y"=>24, "Z"=>25, "2"=>26, "3"=>27, "4"=>28, "5"=>29, "6"=>30, "7"=>31,
+      "0"=>14, "1"=>11, "8"=>1,  # mistyped chars
       "="=>-1,
-    }
-
-    DECODE_LENGTH = {
-      1 => 1,  #  5 bits -> 1 byte (irregular)
-      2 => 1,  # 10 bits -> 1 byte
-      3 => 2,  # 15 bits -> 2 bytes (irregular)
-      4 => 2,  # 20 bits -> 2 bytes
-      5 => 3,  # 25 bits -> 3 bytes
-      6 => 4,  # 30 bits -> 4 bytes (irregular)
-      7 => 4,  # 35 bits -> 4 bytes
-      8 => 5,  # 40 bits -> 5 bytes
     }
 
     module_function
 
-    def encode(bytes, padding: true)
+    def encode(bytes)
       return nil unless bytes
-      pad = padding ? "=" : ""
-      ret = ""
       bytes = bytes.dup.force_encoding("binary")
-      off = 0
-      while off < bytes.length
-        n = 0
-        bits = bytes[off, 5]
-        off += 5
-        l = (bits.length * 8.0 / 5.0).ceil
-        bits << "\0" while bits.length < 5
-        bits.each_byte{|b| n = (n << 8) | b }
-        (1..8).each do |i|
-          ret << ((i > l) ? pad : ENCODE_CHARS[(n >> (8-i)*5) & 0x1f])
+      ret = ""
+      offset = buffer = buffered = 0
+      while offset < bytes.length
+        buffer = ((buffer << 8) | bytes[offset].ord)
+        buffered += 8
+        offset += 1
+        while buffered >= 5
+          ret << ENCODE_CHARS[buffer >> (buffered - 5)]
+          buffered -= 5
+          buffer &= (2 ** buffered - 1)
         end
+      end
+      if buffered > 0
+        ret << ENCODE_CHARS[buffer << (5 - buffered)]
       end
       return ret
     end
 
     def decode(chars)
       return nil unless chars
-      ret = ""
+      ret = "".force_encoding("binary")
       chars = chars.upcase
-      ret.force_encoding("binary")
-      off = 0
-      while off < chars.length
-        n = l = 0
-        bits = chars[off, 8]
-        off += 8
-        bits << "=" while bits.length < 8
-        bits.each_char.with_index do |c, i|
-          d = DECODE_MAP[c]
-          if d.nil?
-            raise ArgumentError, "invalid char: #{c}"
-          elsif d < 0
-            n <<= 5 * (8-i)
-            off = chars.length
-            break
-          else
-            n <<= 5
-            n |= d
-            l = DECODE_LENGTH[i+1]
-          end
-        end
-        ret << (1..l).map{|i| (n >> 40 - i * 8) & 0xff }.pack("c*")
+      buffer = buffered = 0
+      chars.each_char do |c|
+        next if /[\s\-]/ =~ c
+        d = DECODE_MAP[c]
+        raise ArgumentError, "invalid char: #{c}" if d.nil?
+        break if d < 0
+        buffer = (buffer << 5) | d
+        buffered += 5
+        next if buffered < 8
+        ret << ((buffer >> (buffered - 8)) & 0xff)
+        buffered -= 8
       end
       return ret
     end
