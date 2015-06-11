@@ -42,7 +42,7 @@ module OTP
       raise ArgumentError, "last must be greater than or equal to 0" if last < 0
       raise ArgumentError, "post must be greater than or equal to 0" if post < 0
       return false if given_pw.nil? || given_pw.empty?
-      return (-last..post).any?{|i| compare(password(i), given_pw) }
+      return (-last..post).any?{|i| otp_compare(password(i), given_pw) }
     end
 
     def to_uri
