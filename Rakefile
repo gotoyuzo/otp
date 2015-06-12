@@ -8,7 +8,8 @@ end
 
 desc "Run rubocop"
 task :rubocop do
-  sh "rubocop lib -f html -o rubocop.html"
+  sh "rubocop lib -f html -o rubocop.html" rescue nil
 end
 
-task :default => :test
+task :default => [:test, :rubocop]
+
