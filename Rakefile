@@ -6,4 +6,9 @@ Rake::TestTask.new(:test) do |test|
   test.verbose = true
 end
 
-task :default => :test
+desc "Run rubocop"
+task :rubocop do
+  sh "rubocop lib -f html -o rubocop.html"
+end
+
+task :default => [:test, :rubocop]
