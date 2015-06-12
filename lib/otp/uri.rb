@@ -29,9 +29,7 @@ module OTP
       label = otp.accountname.dup
       label.prepend("#{otp.issuer}:") if otp.issuer
       return "%s://%s/%s?%s" % [
-        SCHEME,
-        ::URI.encode(typename),
-        ::URI.encode(label),
+        SCHEME, typename, percent_escape(label),
         ::URI.encode_www_form(otp.uri_params)
       ]
     end
@@ -43,6 +41,10 @@ module OTP
       return klass
     rescue
       raise "unknown OTP type: #{uri.host}"
+    end
+
+    def percent_escape(str)
+      return str.gsub(/[^a-zA-Z0-9\-\._~:@]/){|c| "%%%02x" % c.ord }
     end
   end
 end
