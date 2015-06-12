@@ -10,8 +10,9 @@ module OTP
       "I"=>8,  "J"=>9,  "K"=>10, "L"=>11, "M"=>12, "N"=>13, "O"=>14, "P"=>15,
       "Q"=>16, "R"=>17, "S"=>18, "T"=>19, "U"=>20, "V"=>21, "W"=>22, "X"=>23,
       "Y"=>24, "Z"=>25, "2"=>26, "3"=>27, "4"=>28, "5"=>29, "6"=>30, "7"=>31,
-      "0"=>14, "1"=>11, "8"=>1,  # mistyped chars
-      "="=>-1,
+      "0"=>14, "1"=>11, "8"=>1,                        # mistyped chars
+      " "=>-2, "-"=>-2, "\n"=>-2, "\r"=>-2, "\t"=>-2,  # separators
+      "="=>-1,                                         # padding
     }
 
     module_function
@@ -28,7 +29,7 @@ module OTP
         while buffered >= 5
           ret << ENCODE_CHARS[buffer >> (buffered - 5)]
           buffered -= 5
-          buffer &= (2 ** buffered - 1)
+          buffer &= (0xff >> (8 - buffered))
         end
       end
       if buffered > 0
@@ -43,10 +44,10 @@ module OTP
       chars = chars.upcase
       buffer = buffered = 0
       chars.each_char do |c|
-        next if /[\s\-]/ =~ c
         d = DECODE_MAP[c]
         raise ArgumentError, "invalid char: #{c}" if d.nil?
-        break if d < 0
+        next if d == -2
+        break if d == -1
         buffer = (buffer << 5) | d
         buffered += 5
         next if buffered < 8
