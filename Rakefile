@@ -11,4 +11,4 @@ task :rubocop do
   sh "rubocop lib -f html -o rubocop.html"
 end
 
-task :default => [:test, :rubocop]
+task :default => :test
