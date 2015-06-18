@@ -38,6 +38,10 @@ module OTP
       return ret
     end
 
+    def padding(str)
+      return str + "=" * (-str.length % 8)
+    end
+
     def decode(chars)
       return nil unless chars
       ret = "".force_encoding("binary")
@@ -56,5 +60,8 @@ module OTP
       end
       return ret
     end
+
+    alias encode32 encode
+    alias decode32 decode
   end
 end
