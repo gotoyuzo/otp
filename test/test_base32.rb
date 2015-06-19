@@ -41,6 +41,17 @@ class TestBase32 < Test::Unit::TestCase
     assert_decode("foo", "m\nz\rx\tw-6")
   end
 
+  def test_padding
+    assert_equal("A=======", OTP::Base32.padding("A"))
+    assert_equal("AB======", OTP::Base32.padding("AB"))
+    assert_equal("ABC=====", OTP::Base32.padding("ABC"))
+    assert_equal("ABCD====", OTP::Base32.padding("ABCD"))
+    assert_equal("ABCDE===", OTP::Base32.padding("ABCDE"))
+    assert_equal("ABCDEF==", OTP::Base32.padding("ABCDEF"))
+    assert_equal("ABCDEFG=", OTP::Base32.padding("ABCDEFG"))
+    assert_equal("ABCDEFGH", OTP::Base32.padding("ABCDEFGH"))
+  end
+
   def test_unspecified
     e = assert_raise(ArgumentError){ OTP::Base32.decode("MY9") }
     assert_equal("invalid char: 9", e.message)
