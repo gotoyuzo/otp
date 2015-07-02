@@ -47,11 +47,11 @@ You can use the last and post option parameters to verify several generations, i
 
 TOTP and HOTP algorithm details can be referred at the following URLs.
 
-* [HOTP: An HMAC-Based One-Time Password Algorithm](http://tools.ietf.org/html/rfc4226)
-* [TOTP: Time-Based One-Time Password Algorithm](http://tools.ietf.org/html/rfc6238)
+* [RFC4226 - HOTP: An HMAC-Based One-Time Password Algorithm](http://tools.ietf.org/html/rfc4226)
+* [RFC6238 - TOTP: Time-Based One-Time Password Algorithm](http://tools.ietf.org/html/rfc6238)
 
 In the OTP URI format, the value of "secret" is encoded with BASE32 algorithm.
 The Format details are described in the document of Google Authenticator.
 
-* [The Base16, Base32, and Base64 Data Encodings](http://tools.ietf.org/html/rfc4648)
+* [RFC4648 - The Base16, Base32, and Base64 Data Encodings](http://tools.ietf.org/html/rfc4648)
 * [Google Authenticator Key URI format](https://github.com/google/google-authenticator/wiki/Key-Uri-Format)
